@@ -1,0 +1,47 @@
+# Compiled Java class files and Maven build outputs
+**/target/
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# Maven wrapper & log files
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Eclipse IDE metadata
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.sts4-cache/
+
+# VS Code & IntelliJ metadata
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Environment variables, local secrets & logs
+.env
+*.env
+application-local.properties
+application-secret.properties
+*.log
+logs/
