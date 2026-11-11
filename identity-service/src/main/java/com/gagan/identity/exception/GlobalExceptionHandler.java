@@ -1,18 +1,21 @@
 package com.gagan.identity.exception;
 
-import com.gagan.identity.constant.ErrorCodeEnum;
-import com.gagan.identity.dto.ErrorResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import com.gagan.identity.constant.ErrorCodeEnum;
+import com.gagan.identity.dto.ErrorResponse;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
@@ -88,6 +91,24 @@ public class GlobalExceptionHandler {
         ErrorCodeEnum errorEnum = ErrorCodeEnum.GENERIC_ERROR;
         log.error("Unhandled exception on path [{}]: code=[{}]",
                 request.getRequestURI(), errorEnum.getErrorCode(), ex);
+
+        ErrorResponse error = ErrorResponse.builder()
+                .errorCode(errorEnum.getErrorCode())
+                .errorMessage(errorEnum.getErrorMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(errorEnum.getHttpStatus()).body(error);
+    }
+    
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(
+            org.springframework.security.access.AccessDeniedException ex,
+            HttpServletRequest request) {
+
+        ErrorCodeEnum errorEnum = ErrorCodeEnum.ACCESS_DENIED;
+        log.warn("Method access denied on path [{}]: code=[{}]",
+                request.getRequestURI(), errorEnum.getErrorCode());
 
         ErrorResponse error = ErrorResponse.builder()
                 .errorCode(errorEnum.getErrorCode())

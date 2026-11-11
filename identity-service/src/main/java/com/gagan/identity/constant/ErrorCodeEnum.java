@@ -21,7 +21,9 @@ public enum ErrorCodeEnum {
     
     EMAIL_ALREADY_EXISTS("10007", "A user with this email address is already registered.", HttpStatus.CONFLICT),
     INVALID_CREDENTIALS("10008", "Invalid email or password.", HttpStatus.UNAUTHORIZED),
-    USER_NOT_FOUND("10009", "Requested user account was not found.", HttpStatus.NOT_FOUND);
+    USER_NOT_FOUND("10009", "Requested user account was not found.", HttpStatus.NOT_FOUND),
+	INVALID_TOKEN("10010", "Authentication token is missing, expired, or invalid.", HttpStatus.UNAUTHORIZED),
+    ACCESS_DENIED("10011", "You do not have permission to access this resource.", HttpStatus.FORBIDDEN);
 
     private final String errorCode;
     private final String errorMessage;
