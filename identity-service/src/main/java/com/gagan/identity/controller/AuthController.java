@@ -1,5 +1,7 @@
 package com.gagan.identity.controller;
 
+import com.gagan.identity.dto.AuthResponse;
+import com.gagan.identity.dto.LoginRequest;
 import com.gagan.identity.dto.RegisterRequest;
 import com.gagan.identity.dto.UserResponse;
 import com.gagan.identity.service.AuthService;
@@ -26,5 +28,12 @@ public class AuthController {
         log.info("Received registration request for email [{}]", request.getEmail());
         UserResponse response = authService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        log.info("Received login request for email [{}]", request.getEmail());
+        AuthResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 }

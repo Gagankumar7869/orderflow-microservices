@@ -18,19 +18,17 @@ import java.util.Map;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    // O(1) lookup map to eliminate all if-else branching for validation codes
+    
     private static final Map<String, ErrorCodeEnum> VALIDATION_ERROR_MAP = new HashMap<>();
 
     static {
-        // Full Name constraints
+        
         VALIDATION_ERROR_MAP.put("fullName:NotBlank", ErrorCodeEnum.FULL_NAME_BLANK);
         VALIDATION_ERROR_MAP.put("fullName:Size", ErrorCodeEnum.FULL_NAME_INVALID_LENGTH);
 
-        // Email constraints
         VALIDATION_ERROR_MAP.put("email:NotBlank", ErrorCodeEnum.EMAIL_BLANK);
         VALIDATION_ERROR_MAP.put("email:Email", ErrorCodeEnum.EMAIL_INVALID);
 
-        // Password constraints
         VALIDATION_ERROR_MAP.put("password:NotBlank", ErrorCodeEnum.PASSWORD_BLANK);
         VALIDATION_ERROR_MAP.put("password:Size", ErrorCodeEnum.PASSWORD_INVALID_LENGTH);
     }
@@ -63,7 +61,6 @@ public class GlobalExceptionHandler {
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             fieldErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
 
-            // Resolve error code via Map lookup (no if-else)
             if (primaryError == ErrorCodeEnum.GENERIC_ERROR) {
                 String lookupKey = fieldError.getField() + ":" + fieldError.getCode();
                 primaryError = VALIDATION_ERROR_MAP.getOrDefault(lookupKey, ErrorCodeEnum.GENERIC_ERROR);
