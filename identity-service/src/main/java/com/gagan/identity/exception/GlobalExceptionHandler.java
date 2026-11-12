@@ -35,24 +35,7 @@ public class GlobalExceptionHandler {
         VALIDATION_ERROR_MAP.put("password:NotBlank", ErrorCodeEnum.PASSWORD_BLANK);
         VALIDATION_ERROR_MAP.put("password:Size", ErrorCodeEnum.PASSWORD_INVALID_LENGTH);
     }
-
-    @ExceptionHandler(IdentityServiceException.class)
-    public ResponseEntity<ErrorResponse> handleIdentityServiceException(
-            IdentityServiceException ex,
-            HttpServletRequest request) {
-
-        log.warn("Business exception on path [{}]: code=[{}], message=[{}]",
-                request.getRequestURI(), ex.getErrorCode(), ex.getErrorMessage());
-
-        ErrorResponse error = ErrorResponse.builder()
-                .errorCode(ex.getErrorCode())
-                .errorMessage(ex.getErrorMessage())
-                .timestamp(LocalDateTime.now())
-                .build();
-
-        return ResponseEntity.status(ex.getHttpStatus()).body(error);
-    }
-
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(
             MethodArgumentNotValidException ex,
@@ -82,6 +65,25 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(primaryError.getHttpStatus()).body(error);
     }
+
+    @ExceptionHandler(IdentityServiceException.class)
+    public ResponseEntity<ErrorResponse> handleIdentityServiceException(
+            IdentityServiceException ex,
+            HttpServletRequest request) {
+
+        log.warn("Business exception on path [{}]: code=[{}], message=[{}]",
+                request.getRequestURI(), ex.getErrorCode(), ex.getErrorMessage());
+
+        ErrorResponse error = ErrorResponse.builder()
+                .errorCode(ex.getErrorCode())
+                .errorMessage(ex.getErrorMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(ex.getHttpStatus()).body(error);
+    }
+
+    
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
