@@ -24,7 +24,9 @@ public enum ErrorCodeEnum {
     PRODUCT_NOT_FOUND("20015", "Requested product was not found.", HttpStatus.NOT_FOUND),
     INSUFFICIENT_STOCK("20016", "Insufficient stock available for the requested product.", HttpStatus.CONFLICT),
     INVALID_TOKEN("20017", "Authentication token is missing, expired, or invalid.", HttpStatus.UNAUTHORIZED),
-    ACCESS_DENIED("20018", "You do not have permission to perform this catalog operation.", HttpStatus.FORBIDDEN);
+    ACCESS_DENIED("20018", "You do not have permission to perform this catalog operation.", HttpStatus.FORBIDDEN),
+    QUANTITY_NULL("20019", "Stock adjustment quantity is required", HttpStatus.BAD_REQUEST),
+    QUANTITY_INVALID("20020", "Stock adjustment quantity must be at least 1", HttpStatus.BAD_REQUEST);
 
     private final String errorCode;
     private final String errorMessage;

@@ -10,4 +10,6 @@ public interface ProductService {
     List<ProductResponse> getAllActiveProducts(Long categoryId);
     ProductResponse getProductById(Long productId);
     ProductResponse getProductBySku(String sku);
+    ProductResponse reserveStock(Long productId, int quantity);
+    ProductResponse releaseStock(Long productId, int quantity);
 }

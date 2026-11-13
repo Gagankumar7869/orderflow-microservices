@@ -33,6 +33,8 @@ public class GlobalExceptionHandler {
         VALIDATION_ERROR_MAP.put("stockQuantity:NotNull", ErrorCodeEnum.STOCK_NULL);
         VALIDATION_ERROR_MAP.put("stockQuantity:Min", ErrorCodeEnum.STOCK_NEGATIVE);
         VALIDATION_ERROR_MAP.put("categoryId:NotNull", ErrorCodeEnum.CATEGORY_ID_NULL);
+        VALIDATION_ERROR_MAP.put("quantity:NotNull", ErrorCodeEnum.QUANTITY_NULL);
+        VALIDATION_ERROR_MAP.put("quantity:Min", ErrorCodeEnum.QUANTITY_INVALID);
     }
 
     @ExceptionHandler(CatalogServiceException.class)

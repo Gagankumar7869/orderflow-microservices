@@ -1,16 +1,25 @@
 package com.gagan.catalog.controller;
 
-import com.gagan.catalog.dto.ProductRequest;
-import com.gagan.catalog.dto.ProductResponse;
-import com.gagan.catalog.service.ProductService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.gagan.catalog.dto.ProductRequest;
+import com.gagan.catalog.dto.ProductResponse;
+import com.gagan.catalog.dto.StockUpdateRequest;
+import com.gagan.catalog.service.ProductService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -40,5 +49,20 @@ public class ProductController {
     @GetMapping("/sku/{sku}")
     public ResponseEntity<ProductResponse> getProductBySku(@PathVariable String sku) {
         return ResponseEntity.ok(productService.getProductBySku(sku));
+    }
+    @PostMapping("/{productId}/reserve-stock")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'ADMIN')")
+    public ResponseEntity<ProductResponse> reserveStock(
+            @PathVariable Long productId,
+            @Valid @RequestBody StockUpdateRequest request) {
+        return ResponseEntity.ok(productService.reserveStock(productId, request.getQuantity()));
+    }
+
+    @PostMapping("/{productId}/release-stock")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'ADMIN')")
+    public ResponseEntity<ProductResponse> releaseStock(
+            @PathVariable Long productId,
+            @Valid @RequestBody StockUpdateRequest request) {
+        return ResponseEntity.ok(productService.releaseStock(productId, request.getQuantity()));
     }
 }

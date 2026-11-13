@@ -80,6 +80,51 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new CatalogServiceException(ErrorCodeEnum.PRODUCT_NOT_FOUND));
         return mapToResponse(product);
     }
+    
+    @Override
+    @Transactional
+    public ProductResponse reserveStock(Long productId, int quantity) {
+        int updatedRows = productRepository.deductStockAtomically(productId, quantity);
+
+        if (updatedRows == 0) {
+            Product existing = productRepository.findByIdWithCategory(productId)
+                    .orElseThrow(() -> new CatalogServiceException(ErrorCodeEnum.PRODUCT_NOT_FOUND));
+
+            if (!Boolean.TRUE.equals(existing.getIsActive())) {
+                throw new CatalogServiceException(ErrorCodeEnum.PRODUCT_NOT_FOUND);
+            }
+
+            log.warn("Stock reservation failed for productId=[{}]: requested=[{}], available=[{}]",
+                    productId, quantity, existing.getStockQuantity());
+            throw new CatalogServiceException(ErrorCodeEnum.INSUFFICIENT_STOCK);
+        }
+
+        Product updatedProduct = productRepository.findByIdWithCategory(productId)
+                .orElseThrow(() -> new CatalogServiceException(ErrorCodeEnum.PRODUCT_NOT_FOUND));
+
+        log.info("Reserved [{}] units for productId=[{}], remainingStock=[{}]",
+                quantity, productId, updatedProduct.getStockQuantity());
+
+        return mapToResponse(updatedProduct);
+    }
+
+    @Override
+    @Transactional
+    public ProductResponse releaseStock(Long productId, int quantity) {
+        int updatedRows = productRepository.restoreStockAtomically(productId, quantity);
+
+        if (updatedRows == 0) {
+            throw new CatalogServiceException(ErrorCodeEnum.PRODUCT_NOT_FOUND);
+        }
+
+        Product updatedProduct = productRepository.findByIdWithCategory(productId)
+                .orElseThrow(() -> new CatalogServiceException(ErrorCodeEnum.PRODUCT_NOT_FOUND));
+
+        log.info("Released [{}] units back to productId=[{}], updatedStock=[{}]",
+                quantity, productId, updatedProduct.getStockQuantity());
+
+        return mapToResponse(updatedProduct);
+    }
 
     private ProductResponse mapToResponse(Product product) {
         return ProductResponse.builder()

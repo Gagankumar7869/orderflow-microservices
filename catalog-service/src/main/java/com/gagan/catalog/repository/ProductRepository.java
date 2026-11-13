@@ -2,6 +2,7 @@ package com.gagan.catalog.repository;
 
 import com.gagan.catalog.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -25,4 +26,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p JOIN FETCH p.category WHERE UPPER(p.sku) = UPPER(:sku)")
     Optional<Product> findBySkuWithCategory(@Param("sku") String sku);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Product p SET p.stockQuantity = p.stockQuantity - :quantity " +
+           "WHERE p.productId = :productId AND p.isActive = true AND p.stockQuantity >= :quantity")
+    int deductStockAtomically(@Param("productId") Long productId, @Param("quantity") int quantity);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Product p SET p.stockQuantity = p.stockQuantity + :quantity " +
+           "WHERE p.productId = :productId AND p.isActive = true")
+    int restoreStockAtomically(@Param("productId") Long productId, @Param("quantity") int quantity);
 }
