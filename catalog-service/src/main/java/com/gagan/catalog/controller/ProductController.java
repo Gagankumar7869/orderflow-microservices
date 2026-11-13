@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gagan.catalog.dto.ProductRequest;
 import com.gagan.catalog.dto.ProductResponse;
+import com.gagan.catalog.dto.ReleaseStockRequest;
 import com.gagan.catalog.dto.StockUpdateRequest;
 import com.gagan.catalog.service.ProductService;
 
@@ -55,14 +56,22 @@ public class ProductController {
     public ResponseEntity<ProductResponse> reserveStock(
             @PathVariable Long productId,
             @Valid @RequestBody StockUpdateRequest request) {
-        return ResponseEntity.ok(productService.reserveStock(productId, request.getQuantity()));
+        return ResponseEntity.ok(productService.reserveStock(productId, request));
     }
 
     @PostMapping("/{productId}/release-stock")
     @PreAuthorize("hasAnyRole('CUSTOMER', 'ADMIN')")
     public ResponseEntity<ProductResponse> releaseStock(
             @PathVariable Long productId,
-            @Valid @RequestBody StockUpdateRequest request) {
-        return ResponseEntity.ok(productService.releaseStock(productId, request.getQuantity()));
+            @Valid @RequestBody ReleaseStockRequest request) {
+        return ResponseEntity.ok(productService.releaseStock(productId, request));
+    }
+
+    @PostMapping("/{productId}/confirm-stock")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'ADMIN')")
+    public ResponseEntity<ProductResponse> confirmStock(
+            @PathVariable Long productId,
+            @Valid @RequestBody ReleaseStockRequest request) {
+        return ResponseEntity.ok(productService.confirmStock(productId, request));
     }
 }

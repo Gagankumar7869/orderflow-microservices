@@ -34,6 +34,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE Product p SET p.stockQuantity = p.stockQuantity + :quantity " +
-           "WHERE p.productId = :productId AND p.isActive = true")
+           "WHERE p.productId = :productId")
     int restoreStockAtomically(@Param("productId") Long productId, @Param("quantity") int quantity);
 }

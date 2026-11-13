@@ -26,7 +26,13 @@ public enum ErrorCodeEnum {
     INVALID_TOKEN("20017", "Authentication token is missing, expired, or invalid.", HttpStatus.UNAUTHORIZED),
     ACCESS_DENIED("20018", "You do not have permission to perform this catalog operation.", HttpStatus.FORBIDDEN),
     QUANTITY_NULL("20019", "Stock adjustment quantity is required", HttpStatus.BAD_REQUEST),
-    QUANTITY_INVALID("20020", "Stock adjustment quantity must be at least 1", HttpStatus.BAD_REQUEST);
+    QUANTITY_INVALID("20020", "Stock adjustment quantity must be at least 1", HttpStatus.BAD_REQUEST),
+    ORDER_REFERENCE_BLANK("20021", "Order reference is required for stock operations", HttpStatus.BAD_REQUEST),
+    RESERVATION_NOT_FOUND("20022", "Stock reservation not found for this order reference.", HttpStatus.NOT_FOUND),
+    RESERVATION_ALREADY_RELEASED("20023", "Stock reservation for this order reference has already been released.", HttpStatus.CONFLICT),
+    RESERVATION_REQUEST_MISMATCH("20024", "Order reference already exists with a different reservation quantity.", HttpStatus.CONFLICT),
+    RESERVATION_ALREADY_CONFIRMED("20025", "Stock reservation is already confirmed and cannot be released.", HttpStatus.CONFLICT),
+    CONCURRENT_RESERVATION_CONFLICT("20026", "A concurrent stock reservation for this order reference is already in progress.", HttpStatus.CONFLICT);
 
     private final String errorCode;
     private final String errorMessage;
